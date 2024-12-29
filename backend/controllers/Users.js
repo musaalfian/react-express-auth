@@ -51,10 +51,10 @@ const login = async (req, res) => {
       // create token
       const { id, name } = user;
       const accessToken = jwt.sign({ id, name, email }, process.env.ACCESS_TOKEN, {
-         expiresIn: '20s',
+         expiresIn: '5s',
       });
       const refreshToken = jwt.sign({ id, name, email }, process.env.REFRESH_TOKEN, {
-         expiresIn: '1d',
+         expiresIn: '10s',
       });
 
       // update user data

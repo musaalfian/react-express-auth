@@ -4,7 +4,11 @@ import Users from '../models/UserModel.js';
 const RefreshToken = async (req, res) => {
    try {
       const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) return res.sendStatus(401);
+      // res.json({ refreshToken });
+      if (!refreshToken) {
+         console.log('No refresh token in cookies');
+         return res.sendStatus(401);
+      }
 
       const isValidRefreshToken = await Users.findOne({
          where: {
