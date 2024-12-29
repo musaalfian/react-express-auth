@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Container from './Container';
-import Card from './Card';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import axios from 'axios';
-import { redirect, useNavigate } from 'react-router-dom';
+import authServices from '../services/auth.service';
+import Card from './Card';
+import Container from './Container';
 
 const loginSchema = yup
    .object({
@@ -25,15 +25,9 @@ const Login = () => {
 
    const onSubmit = async (credentials) => {
       try {
-         await axios
-            .post('http://localhost:5000/login', credentials)
-            .then(function () {
-               navigate('/dashboard');
-            })
-            .catch(function (error) {
-               setMsg(error.response.data.msg);
-               console.log(error);
-            });
+         const { data } = await authServices.signIn(credentials);
+         localStorage.setItem('myToken', data.accessToken);
+         navigate('/dashboard');
       } catch (error) {
          console.log(error);
       }
