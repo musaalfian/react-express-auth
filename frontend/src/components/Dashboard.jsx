@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userServices from '../services/user.service';
+import { Avatar, Dropdown, Navbar } from 'flowbite-react';
 
 const Dashboard = () => {
    const [users, setUsers] = useState([]);
@@ -26,6 +27,34 @@ const Dashboard = () => {
 
    return (
       <>
+         {/* Navbar */}
+         <Navbar fluid rounded className='w-1/2 mx-auto !px-0'>
+            <Navbar.Brand href='https://flowbite-react.com'>
+               <span className='self-center whitespace-nowrap font-semibold dark:text-white'>Simple Dashboard</span>
+            </Navbar.Brand>
+            <div className='flex md:order-2'>
+               <Dropdown
+                  arrowIcon={false}
+                  inline
+                  label={
+                     <Avatar
+                        alt='User settings'
+                        img='https://flowbite.com/docs/images/people/profile-picture-5.jpg'
+                        rounded
+                     />
+                  }
+               >
+                  <Dropdown.Header>
+                     <span className='block text-sm'>Bonnie Green</span>
+                     <span className='block truncate text-sm font-medium'>name@flowbite.com</span>
+                  </Dropdown.Header>
+                  <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
+               </Dropdown>
+               <Navbar.Toggle />
+            </div>
+         </Navbar>
+
+         {/* List users */}
          <div className='grid w-full h-screen place-items-center bg-sky-100'>
             <div className='w-1/2'>
                <h1 className='text-gray-800 font-medium text-xl mb-4'>Welcome Back!</h1>
@@ -42,15 +71,6 @@ const Dashboard = () => {
                   ) : (
                      <p className='px-4 pt-4 text-sm'>No Users</p>
                   )}
-               </div>
-               <div className='flex items-center justify-end gap-3 mt-4'>
-                  <button
-                     type='button'
-                     onClick={handleLogout}
-                     className='bg-red-500 px-3 py-2.5 rounded-md w-fit text-sm text-white'
-                  >
-                     Logout
-                  </button>
                </div>
             </div>
          </div>
