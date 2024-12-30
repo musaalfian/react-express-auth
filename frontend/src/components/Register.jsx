@@ -1,34 +1,55 @@
-import React from 'react';
-import Container from './Container';
-import Card from './Card';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import userServices from '../services/user.service';
+import Card from './Card';
+import Container from './Container';
 
 const registerSchema = yup
    .object({
       name: yup.string().required('Nama tidak boleh kosong'),
       email: yup.string().required('Email tidak boleh kosong'),
+      address: yup.string().required('Address tidak boleh kosong'),
       password: yup.string().required('Password tidak boleh kosong'),
       passwordConfirmation: yup.string().required('Konfirmasi password tidak boleh kosong'),
    })
    .required();
 
 const Register = () => {
+   const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
+
    const {
       register,
       formState: { errors },
       handleSubmit,
+      reset,
    } = useForm({ resolver: yupResolver(registerSchema) });
 
    const onSubmit = async (data) => {
-      console.log(data);
+      if (data.password !== data.passwordConfirmation) {
+         alert('Konfirmasi password tidak sesuai');
+      }
+
+      try {
+         await userServices.register(data);
+         reset();
+         setIsRegisterSuccess(true);
+      } catch (error) {
+         console.log(error);
+      }
    };
    return (
       <>
          <Container>
             <Card>
                <div className='text-center font-bold mb-5'>Daftar</div>
+               {isRegisterSuccess && (
+                  <div className='p-3 mb-3 rounded-md text-sm bg-emerald-50 border border-emerald-300 text-emerald-500'>
+                     <span className='font-semibold block mb-1'>Registrasi berhasil!</span>
+                     <p>Silahkan masuk menggunakan akun yang telah Anda buat.</p>
+                  </div>
+               )}
                <form onSubmit={handleSubmit(onSubmit)}>
                   <div className='mb-4 text-sm'>
                      <label htmlFor='name' className='inline-block mb-1.5 font-semibold'>
@@ -54,6 +75,18 @@ const Register = () => {
                         className='py-2.5 px-3 border focus:border-sky-400 text-slate-700 border-gray-300 rounded-md ring-0 outline-none w-full'
                      />
                      <p className='text-sm mt-1.5 text-red-500'>{errors.email?.message}</p>
+                  </div>
+                  <div className='mb-4 text-sm'>
+                     <label htmlFor='address' className='inline-block mb-1.5 font-semibold'>
+                        Address
+                     </label>
+                     <input
+                        {...register('address')}
+                        name='address'
+                        type='text'
+                        className='py-2.5 px-3 border focus:border-sky-400 text-slate-700 border-gray-300 rounded-md ring-0 outline-none w-full'
+                     />
+                     <p className='text-sm mt-1.5 text-red-500'>{errors.address?.message}</p>
                   </div>
                   <div className='mb-4 text-sm'>
                      <label htmlFor='password' className='inline-block mb-1.5 font-semibold'>

@@ -15,6 +15,16 @@ try {
    console.log(error);
 }
 
+// Sinkronisasi semua model
+// (async () => {
+//    try {
+//       await db.sync({ force: true });
+//       console.log('Database synced successfully!');
+//    } catch (error) {
+//       console.error('Error syncing database:', error);
+//    }
+// })();
+
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(cookieParser());
 app.use(express.json());

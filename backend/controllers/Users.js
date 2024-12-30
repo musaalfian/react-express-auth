@@ -15,21 +15,29 @@ const getUsers = async (req, res) => {
 
 const register = async (req, res) => {
    // get request
-   const { name, email, password, confirmPassword } = req.body;
-   if (password !== confirmPassword) {
+   const { name, email, address, password, passwordConfirmation } = req.body;
+   if (!name || !email || !address || !password || !passwordConfirmation) {
+      return res.status(400).json({ msg: 'Semua field wajib diisi' });
+   }
+
+   if (password !== passwordConfirmation) {
       return res.status(400).json({ msg: 'Konfirmasi password tidak sesuai' });
    }
-   const salt = await bcrypt.genSalt();
-   const hashPassword = await bcrypt.hash(password, salt);
 
    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
+
       await Users.create({
          name: name,
          email: email,
+         address: address,
          password: hashPassword,
       });
       res.json({ msg: 'Registrasi berhasil!' });
    } catch (error) {
+      console.log('error');
+
       console.log(error);
    }
 };
