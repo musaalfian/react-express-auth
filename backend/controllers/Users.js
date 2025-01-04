@@ -36,8 +36,6 @@ const register = async (req, res) => {
       });
       res.json({ msg: 'Registrasi berhasil!' });
    } catch (error) {
-      console.log('error');
-
       console.log(error);
    }
 };
@@ -59,10 +57,10 @@ const login = async (req, res) => {
       // create token
       const { id, name } = user;
       const accessToken = jwt.sign({ id, name, email }, process.env.ACCESS_TOKEN, {
-         expiresIn: '5s',
+         expiresIn: '20s',
       });
       const refreshToken = jwt.sign({ id, name, email }, process.env.REFRESH_TOKEN, {
-         expiresIn: '10s',
+         expiresIn: '1d',
       });
 
       // update user data
@@ -73,7 +71,23 @@ const login = async (req, res) => {
          httpOnly: true,
          maxAge: 24 * 60 * 60 * 1000,
       });
-      res.json({ accessToken });
+
+      // send user data
+      const userData = {
+         id: user.id,
+         name: user.name,
+         email: user.email,
+         address: user.address,
+      };
+
+      res.json({
+         status: 'success',
+         message: 'Login successful',
+         data: {
+            accessToken,
+            user: userData,
+         },
+      });
    } catch (error) {
       res.status(500).json({ msg: 'Terjadi kesalahan pada server' });
       console.log(error);

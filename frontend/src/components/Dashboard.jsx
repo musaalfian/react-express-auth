@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userServices from '../services/user.service';
 import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { authUser, logout } from '../redux/slices/userSlice';
 
 const Dashboard = () => {
+   const dispatch = useDispatch();
+   const authenticatedUser = useSelector(authUser);
    const [users, setUsers] = useState([]);
    const navigate = useNavigate();
 
@@ -17,7 +21,9 @@ const Dashboard = () => {
    };
 
    const handleLogout = () => {
+      dispatch(logout());
       localStorage.removeItem('myToken');
+      localStorage.removeItem('authenticatedUser');
       navigate('/login');
    };
 
@@ -45,8 +51,8 @@ const Dashboard = () => {
                   }
                >
                   <Dropdown.Header>
-                     <span className='block text-sm'>Bonnie Green</span>
-                     <span className='block truncate text-sm font-medium'>name@flowbite.com</span>
+                     <span className='block text-sm'>{authenticatedUser.name}</span>
+                     <span className='block truncate text-sm font-medium'>{authenticatedUser.email}</span>
                   </Dropdown.Header>
                   <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
                </Dropdown>
@@ -57,7 +63,7 @@ const Dashboard = () => {
          {/* List users */}
          <div className='grid w-full h-screen place-items-center bg-sky-100'>
             <div className='w-1/2'>
-               <h1 className='text-gray-800 font-medium text-xl mb-4'>Welcome Back!</h1>
+               <h1 className='text-gray-800 font-medium text-xl mb-4'>Welcome Back, {authenticatedUser.name}!</h1>
                <div className='py-4 border border-gray-200 bg-white rounded-md'>
                   <h3 className='font-bold border-b text-gray-800 pb-4 px-4'>List User</h3>
                   {users.length > 0 ? (

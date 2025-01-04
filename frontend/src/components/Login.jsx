@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { login } from '../redux/slices/userSlice';
 import authServices from '../services/auth.service';
 import Card from './Card';
 import Container from './Container';
@@ -16,6 +18,7 @@ const loginSchema = yup
 
 const Login = () => {
    const navigate = useNavigate();
+   const dispatch = useDispatch();
    const [msg, setMsg] = useState('');
    const {
       register,
@@ -26,7 +29,8 @@ const Login = () => {
    const onSubmit = async (credentials) => {
       try {
          const { data } = await authServices.signIn(credentials);
-         localStorage.setItem('myToken', data.accessToken);
+         dispatch(login({ user: data.data.user, accessToken: data.data.accessToken }));
+         localStorage.setItem('myToken', data.data.accessToken);
          navigate('/dashboard');
       } catch (error) {
          console.log(error);
