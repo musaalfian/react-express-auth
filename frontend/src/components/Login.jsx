@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import authServices from '../services/auth.service';
 import Card from './Card';
@@ -77,9 +77,9 @@ const Login = () => {
                   </button>
                   <p className='mt-4 text-sm text-center'>
                      Belum punya akun?{' '}
-                     <a href='/register' className='font-bold'>
+                     <Link to='/register' className='font-bold'>
                         Daftar
-                     </a>
+                     </Link>
                   </p>
                </form>
             </Card>

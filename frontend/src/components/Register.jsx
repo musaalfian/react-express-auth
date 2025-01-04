@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import userServices from '../services/user.service';
 import Card from './Card';
 import Container from './Container';
+import { Link } from 'react-router-dom';
 
 const registerSchema = yup
    .object({
@@ -120,9 +121,9 @@ const Register = () => {
                   </button>
                   <p className='mt-4 text-sm text-center'>
                      Sudah punya akun?{' '}
-                     <a href='/login' className='font-bold'>
+                     <Link to='/login' className='font-bold'>
                         Masuk
-                     </a>
+                     </Link>
                   </p>
                </form>
             </Card>
