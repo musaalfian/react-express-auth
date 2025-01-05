@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Avatar, DarkThemeToggle, Dropdown, Navbar } from 'flowbite-react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,11 @@ const Dashboard = () => {
    const authenticatedUser = useSelector(authUser);
    const navigate = useNavigate();
 
-   const { data: users } = useSuspenseQuery({
+   const {
+      isPending,
+      error,
+      data: users,
+   } = useQuery({
       queryKey: ['users'],
       queryFn: async () => {
          const data = await userServices.getUsers();
@@ -25,10 +29,6 @@ const Dashboard = () => {
       localStorage.removeItem('authenticatedUser');
       navigate('/login');
    };
-
-   // useEffect(() => {
-   //    fetchUsers();
-   // }, []);
 
    return (
       <>
@@ -70,7 +70,9 @@ const Dashboard = () => {
                </h1>
                <div className='py-4 border border-gray-200 bg-white dark:text-slate-100 dark:bg-slate-700 rounded-md'>
                   <h3 className='font-bold border-b text-gray-800 pb-4 px-4 dark:text-white'>List User</h3>
-                  {users?.length > 0 ? (
+                  {isPending ? (
+                     <p className='px-4 pt-4 text-sm'>Loading...</p>
+                  ) : users?.length > 0 ? (
                      users.map((user, idx) => (
                         <ul className='px-4 pt-4' key={idx}>
                            <li>

@@ -14,9 +14,7 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
          <Provider store={store}>
             <QueryClientProvider client={queryClient}>
-               <React.Suspense fallback={<div>Loading...</div>}>
-                  <App />
-               </React.Suspense>
+               <App />
             </QueryClientProvider>
          </Provider>
          ,
